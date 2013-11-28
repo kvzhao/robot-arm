@@ -29,7 +29,6 @@ CFLAGS+=-I./libstm/STM32F4xx_StdPeriph_Driver/inc
 CFLAGS+=-I./libstm/STM32F4xx_StdPeriph_Driver/inc/device_support
 CFLAGS+=-I./libstm/STM32F4xx_StdPeriph_Driver/inc/core_support
 
-
 #STM32F4xx_StdPeriph_Driver\inc
 CFLAGS+=-I./libstm/STM32F4xx_StdPeriph_Driver/inc
 
@@ -40,10 +39,15 @@ CFLAGS+=-I./libstm/Utilities/STM32F4-Discovery
 CFLAGS+=-I$(FREERTOS_INC)
 CFLAGS+=-I$(FREERTOS_PORT_INC)
 
+# LCD 3.2'TFT SSD1289 Driver
+CFLAGS+=-I./tft_driver/inc
+
 #Source Files
 SRC += system_stm32f4xx.c \
 	   startup_stm32f4xx.s\
 	   string.c \
+	   tft_driver/src/LCD_STM32F4.c \
+	   tft_driver/src/fonts.c \
 	   $(LIB_STM)/Utilities/STM32F4-Discovery/stm32f4_discovery.c \
 	   $(FREERTOS_SRC)/tasks.c $(FREERTOS_SRC)/list.c $(FREERTOS_SRC)/portable/MemMang/heap_1.c \
 	   $(FREERTOS_SRC)/portable/GCC/ARM_$(ARCH)/port.c
