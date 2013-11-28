@@ -19,7 +19,7 @@
   *
   * <h2><center>&copy; COPYRIGHT 2011 STMicroelectronics</center></h2>
   ******************************************************************************
-  */ 
+  */
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_it.h"
@@ -143,11 +143,11 @@ void SysTick_Handler(void)
 {
   uint8_t *buf;
   uint8_t temp1, temp2 = 0x00;
-  
+
 
     TimingDelay_Decrement();
 
-  
+
 }
 
 /******************************************************************************/
@@ -174,7 +174,7 @@ void SysTick_Handler(void)
 void EXTI0_IRQHandler(void)
 {
   UserButtonPressed = 0x01;
-  
+
   /* Clear the EXTI line pending bit */
   EXTI_ClearITPendingBit(USER_BUTTON_EXTI_LINE);
 }
@@ -184,28 +184,32 @@ void EXTI0_IRQHandler(void)
   * @param  None
   * @retval None
   */
+/*
 void OTG_FS_WKUP_IRQHandler(void)
 {
 
 }
-
+*/
 /**
   * @brief  This function handles OTG_HS Handler.
   * @param  None
   * @retval None
   */
+/*
 void OTG_FS_IRQHandler(void)
 {
 
 }
-
+*/
 /**
 * @brief  USBD_HID_GetPos
 * @param  None
 * @retval Pointer to report
 */
+/*
 static uint8_t *USBD_HID_GetPos (void)
 {
 
 }
+*/
 /******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
