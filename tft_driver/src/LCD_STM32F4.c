@@ -16,6 +16,9 @@ static __IO uint32_t TimingDelay;
 
 /* Functions *****************************************************************/
 
+
+/* MARCROS  *****************************************************************/
+#define CHAR_BIT 8
 /*
  * Clear the screen.
  */
@@ -549,4 +552,10 @@ void TimingDelay_Decrement(void)
   {
     TimingDelay--;
   }
+}
+
+/* Optimized absolute function, Microsoft's method */
+int abs(int a) {
+    int mask = (a >> (sizeof(int) * CHAR_BIT -1));
+    return (a+mask) ^ mask;
 }
