@@ -1,11 +1,12 @@
 
 /* Includes ------------------------------------------------------------------*/
 
-//#include "FreeRTOSConfig.h"
+#include "FreeRTOSConfig.h"
 #include "FreeRTOS.h"
 #include "task.h"
 
 #include "main.h"
+#include "LCD_STM32F4.h"
 #include "stm32f4xx_conf.h"
 
 /* Private typedef -----------------------------------------------------------*/
@@ -26,6 +27,7 @@ __IO uint8_t UserButtonPressed = 0x00;
 /* Private function prototypes -----------------------------------------------*/
 static void LED_task(void *pvParameters);
 static void button_task(void *pvParameters);
+static void LCD_task(void *pvParameters);
 
 /**
   * @brief  This function handles EXTI0_IRQ Handler.
@@ -59,20 +61,33 @@ int main(void)
   STM_EVAL_LEDOff(LED5);
   STM_EVAL_LEDOff(LED6);
 
+  /* Initialization */
+  Init_SysTick();
+  Init_GPIO();
+  Init_FSMC();
+  Init_LCD();
+
+   STM_EVAL_LEDToggle(LED5);
   /* Reset UserButton_Pressed variable */
   UserButtonPressed = 0x00;
+
+  /* Create a task to display on LCD. */
+  xTaskCreate(LCD_task,
+             (signed portCHAR *) "LCD",
+             512 /* stack size */, NULL,
+             tskIDLE_PRIORITY + 4, NULL);
 
   /* Create a task to flash the LED. */
   xTaskCreate(LED_task,
              (signed portCHAR *) "LED Flash",
              512 /* stack size */, NULL,
-             tskIDLE_PRIORITY + 5, NULL);
+             tskIDLE_PRIORITY + 4, NULL);
 
   /* Create a task to button check. */
   xTaskCreate(button_task,
              (signed portCHAR *) "User Button",
              512 /* stack size */, NULL,
-             tskIDLE_PRIORITY + 5, NULL);
+             tskIDLE_PRIORITY + 4, NULL);
 
   /* Start running the tasks. */
   vTaskStartScheduler();
@@ -116,6 +131,42 @@ static void button_task(void *pvParameters)
 	}
 }
 
+static void LCD_task(void *pvParameters)
+{
+
+  STM_EVAL_LEDToggle(LED4);
+  STM_EVAL_LEDToggle(LED3);
+  STM_EVAL_LEDToggle(LED5);
+  STM_EVAL_LEDToggle(LED6);
+  vTaskDelay(3000);
+
+  /* Demo */
+  while(1)
+  {
+    Clear_Screen(0x0000);
+
+     Set_Font(&Font16x24);
+     Display_String(14, 295, "MMIA PROJEKT 2012", LCD_WHITE);
+     Display_String(72, 287, "DEMONSTRACNY KIT", LCD_WHITE);
+     Set_Font(&Font12x12);
+     Display_String(97, 285, "pre STM32F4-Discovery", LCD_WHITE);
+    Draw_Image(120, 206, 54, 93, logo_urel);
+
+      Set_Font(&Font8x8);
+      Display_String(220, 259, "Jakub Lanik, Jakub Nedoma", LCD_WHITE);
+      Display_String(230, 259, "Martin Tajc, Martin Serik", LCD_WHITE);
+      vTaskDelay(1000);
+
+    Draw_Image(0, 319, 240, 320, mandelbrot1);
+      vTaskDelay(7000);
+
+      Clear_Screen(0x0000);
+      Set_Font(&Font16x24);
+      Display_String(107, 199, "Image", LCD_WHITE);
+
+     vTaskDelay(3000);
+  }
+}
 
 /**
   * @brief  This function handles the test program fail.
