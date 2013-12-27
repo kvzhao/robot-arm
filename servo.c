@@ -16,7 +16,7 @@ void TIM4_PWM_Configuration()
 
     TIM_TimeBaseStructInit( &TIM_TimeBaseInitStruct );
     TIM_TimeBaseInitStruct.TIM_ClockDivision = TIM_CKD_DIV4;
-    TIM_TimeBaseInitStruct.TIM_Period = 3760 - 1;
+    TIM_TimeBaseInitStruct.TIM_Period = 3360 - 1;
     TIM_TimeBaseInitStruct.TIM_Prescaler = 500 - 1;
     TIM_TimeBaseInitStruct.TIM_CounterMode = TIM_CounterMode_Up;
     TIM_TimeBaseInit( TIM4, &TIM_TimeBaseInitStruct );
@@ -27,8 +27,7 @@ void TIM4_PWM_Configuration()
 
     // Initial duty cycle equals 0%. Value can range from zero to 65535.
     // TIM_Pulse = TIM4_CCR1 register (16 bits)
-    TIM_OCInitStruct.TIM_Pulse = 65535;
-    //(0=Always Off, 65535=Always On)
+    TIM_OCInitStruct.TIM_Pulse = 0;
 
     TIM_OC1Init( TIM4, &TIM_OCInitStruct ); // Channel 1  LED
     TIM_OC2Init( TIM4, &TIM_OCInitStruct ); // Channel 2  LED
@@ -62,7 +61,7 @@ void Servo_Configuration()
 
 void Servo_set_pos (uint8_t angle, uint8_t ch)
 {
-    uint32_t cval = 3760 / (10 + 10*angle/180);
+    uint32_t cval = TIM4->ARR / (10 + 10*angle/180);
     switch (ch) {
         case 0:
             TIM4->CCR1 = cval;
