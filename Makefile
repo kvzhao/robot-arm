@@ -11,7 +11,8 @@ FREERTOS_SRC = $(LIB_STM)/FreeRTOS
 FREERTOS_INC = $(FREERTOS_SRC)/include/
 FREERTOS_PORT_INC = $(FREERTOS_SRC)/portable/GCC/ARM_$(ARCH)/
 
-TOOLCHAIN_PATH ?= /usr/local/csl/arm-2012.03/arm-none-eabi
+#TOOLCHAIN_PATH ?= /usr/local/csl/arm-2012.03/arm-none-eabi
+TOOLCHAIN_PATH = arm-none-eabi
 C_LIB= $(TOOLCHAIN_PATH)/lib/thumb2
 
 CFLAGS=-g -O2 -mlittle-endian -mthumb
@@ -45,7 +46,9 @@ SRC += system_stm32f4xx.c \
 	   startup_stm32f4xx.s\
 	   string.c \
 	   $(LIB_STM)/Utilities/STM32F4-Discovery/stm32f4_discovery.c \
-	   $(FREERTOS_SRC)/tasks.c $(FREERTOS_SRC)/list.c $(FREERTOS_SRC)/portable/MemMang/heap_1.c \
+	   $(FREERTOS_SRC)/tasks.c \
+	   $(FREERTOS_SRC)/list.c  \
+	   $(FREERTOS_SRC)/portable/MemMang/heap_1.c \
 	   $(FREERTOS_SRC)/portable/GCC/ARM_$(ARCH)/port.c
 
 all: $(BIN_IMAGE)
