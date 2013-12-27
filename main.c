@@ -1,12 +1,17 @@
 
 /* Includes ------------------------------------------------------------------*/
 
+// FreeRTOS
 #include "FreeRTOSConfig.h"
 #include "FreeRTOS.h"
 #include "task.h"
 
+// System setting
 #include "main.h"
 #include "stm32f4xx_conf.h"
+
+// Lib
+#include "servo.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -27,6 +32,7 @@ __IO uint8_t UserButtonPressed = 0x00;
 static void LED_task(void *pvParameters);
 static void button_task(void *pvParameters);
 static void led_pwm_task(void *pvParameters);
+static void servo_testing_task(void *pvParameters);
 
 /* Private Initialize Configuration */
 static void RCC_Configuration(void);
@@ -49,19 +55,60 @@ void EXTI0_IRQHandler(void)
 
 int main(void)
 {
-  RCC_Configuration();
-  TIM_Configuration();
-  GPIO_Configuration();
 
-  xTaskCreate(led_pwm_task,
+    Servo_Configuration();
+
+    xTaskCreate(servo_testing_task,
              (signed portCHAR *) "LED Flash",
              512 /* stack size */, NULL,
              tskIDLE_PRIORITY + 5, NULL);
 
   /* Start running the tasks. */
-  vTaskStartScheduler();
+    vTaskStartScheduler();
 
   return 0;
+}
+
+static void servo_testing_task(void *pvParameters)
+{
+    while(1) {
+    Servo_set_pos(60,0);
+    vTaskDelay(500);
+    Servo_set_pos(120,0);
+    vTaskDelay(500);
+    Servo_set_pos(60,0);
+    vTaskDelay(500);
+    Servo_set_pos(180,0);
+    vTaskDelay(500);
+/*
+   Servo_set_pos(60,1);
+    vTaskDelay(500);
+    Servo_set_pos(120,1);
+    vTaskDelay(500);
+    Servo_set_pos(60,1);
+    vTaskDelay(500);
+    Servo_set_pos(180,1);
+    vTaskDelay(500);
+
+    Servo_set_pos(60,2);
+    vTaskDelay(500);
+    Servo_set_pos(120,2);
+    vTaskDelay(500);
+    Servo_set_pos(60,2);
+    vTaskDelay(500);
+    Servo_set_pos(180,2);
+    vTaskDelay(500);
+
+    Servo_set_pos(60,3);
+    vTaskDelay(500);
+    Servo_set_pos(120,3);
+    vTaskDelay(500);
+    Servo_set_pos(60,3);
+    vTaskDelay(500);
+    Servo_set_pos(180,3);
+    vTaskDelay(500);
+*/
+    }
 }
 
 static void LED_task(void *pvParameters)
@@ -192,20 +239,20 @@ void GPIO_Configuration(void)
     GPIO_Init( GPIOD, &GPIO_InitStructure );
 }
 
-/* Set Timer4 for PWM */
+/* Set Timer for PWM */
 static void TIM_Configuration(void)
 {
     TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStruct;
     TIM_OCInitTypeDef       TIM_OCInitStruct;
 
-    // Set PWM frequency equal 100Hz.
+    // Set PWM frequency equal 50 Hz.which is standard frequency of servo
     // Let period equal 1000. Therefore, timer runs from zero to 1000. Gives 0.1Hz resolution.
     // Solving for prescaler gives 240.
 
     TIM_TimeBaseStructInit( &TIM_TimeBaseInitStruct );
     TIM_TimeBaseInitStruct.TIM_ClockDivision = TIM_CKD_DIV4;
     TIM_TimeBaseInitStruct.TIM_Period = 1680 - 1;
-    TIM_TimeBaseInitStruct.TIM_Prescaler = 500 - 1;
+    TIM_TimeBaseInitStruct.TIM_Prescaler = 1000 - 1;
     TIM_TimeBaseInitStruct.TIM_CounterMode = TIM_CounterMode_Up;
     TIM_TimeBaseInit( TIM4, &TIM_TimeBaseInitStruct );
 

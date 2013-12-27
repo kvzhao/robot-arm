@@ -45,6 +45,7 @@ CFLAGS+=-I$(FREERTOS_PORT_INC)
 SRC += system_stm32f4xx.c \
 	   startup_stm32f4xx.s\
 	   string.c \
+	   servo.c \
 	   $(LIB_STM)/Utilities/STM32F4-Discovery/stm32f4_discovery.c \
 	   $(FREERTOS_SRC)/tasks.c \
 	   $(FREERTOS_SRC)/list.c  \
