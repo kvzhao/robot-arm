@@ -1,7 +1,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 
-//#include "FreeRTOSConfig.h"
+#include "FreeRTOSConfig.h"
 #include "FreeRTOS.h"
 #include "task.h"
 
@@ -52,26 +52,6 @@ int main(void)
   RCC_Configuration();
   TIM_Configuration();
   GPIO_Configuration();
-
-  /* Initialize LEDs and User_Button on STM32F4-Discovery --------------------*/
- // STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);
-
-  /* Initialize LEDs to be managed by GPIO */
-  /*
-  STM_EVAL_LEDInit(LED4);
-  STM_EVAL_LEDInit(LED3);
-  STM_EVAL_LEDInit(LED5);
-  STM_EVAL_LEDInit(LED6);
-*/
-  /* Turn OFF all LEDs */
-  /*
-  STM_EVAL_LEDOff(LED4);
-  STM_EVAL_LEDOff(LED3);
-  STM_EVAL_LEDOff(LED5);
-  STM_EVAL_LEDOff(LED6);
-*/
-  /* Reset UserButton_Pressed variable */
-//  UserButtonPressed = 0x00;
 
   xTaskCreate(led_pwm_task,
              (signed portCHAR *) "LED Flash",
@@ -234,7 +214,7 @@ static void TIM_Configuration(void)
     TIM_OCInitStruct.TIM_OCMode = TIM_OCMode_PWM1;
 
     // Initial duty cycle equals 0%. Value can range from zero to 65535.
-    //TIM_Pulse = TIM4_CCR1 register (16 bits)
+    // TIM_Pulse = TIM4_CCR1 register (16 bits)
     TIM_OCInitStruct.TIM_Pulse = 65535; //(0=Always Off, 65535=Always On)
 
     TIM_OC1Init( TIM4, &TIM_OCInitStruct ); // Channel 1  LED
